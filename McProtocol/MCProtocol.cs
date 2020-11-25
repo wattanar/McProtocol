@@ -1,4 +1,4 @@
-﻿#define old //Now that .NET Standard is supported in UWP old code is Good
+#define old //Now that .NET Standard is supported in UWP old code is Good
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1148,7 +1148,7 @@ namespace MCProtocol
                     ka.AddRange(BitConverter.GetBytes(45000u));
                     ka.AddRange(BitConverter.GetBytes(5000u));
                     Client.Client.IOControl(IOControlCode.KeepAliveValues, ka.ToArray(), null);
-                    Client.Connect(HostName, PortNumber);
+                    await Client.ConnectAsync(HostName, PortNumber);
                     Stream = Client.GetStream();
 
                 }
@@ -1228,7 +1228,7 @@ namespace MCProtocol
 #if old
 
                 NetworkStream ns = Stream;
-                ns.Write(iCommand, 0, iCommand.Length);
+                await ns.WriteAsync(iCommand, 0, iCommand.Length);
                 ns.Flush();
 
                 using (var ms = new MemoryStream())
@@ -1241,7 +1241,7 @@ namespace MCProtocol
                         {
                             throw new Exception("切断されました");
                         }
-                        ms.Write(buff, 0, sz);
+                        await ms.WriteAsync(buff, 0, sz);
                     } while (ns.DataAvailable);
                     return ms.ToArray();
                 }
